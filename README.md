@@ -1,6 +1,8 @@
 # ExpirySync
 
-project containing submodules to keep track of API versions and working server and client versions that implement these API versions respectively
+This project contains submodules to keep track of API versions and working implementing server and client combinations.
+
+The current API's docs can be found under [releases](https://github.com/lentschi/expiry_sync/releases).
 
 ## Folder structure:
 

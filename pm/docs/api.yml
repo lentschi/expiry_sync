@@ -2,8 +2,11 @@ swagger: '2.0'
 info:
   title: ExpirySync server
   description: |
-    ExpirySync's JSON API documentation. 
-    All datetimes are currently passed and returned in the same format [as in the HTTP header](s. http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1)
+    ExpirySync's JSON API documentation.
+    
+    Created using [Swagger](http://swagger.io/) and exported using [bootprint-swagger](https://www.npmjs.com/package/bootprint-swagger)
+
+    __Note:__ All datetimes are currently passed and returned in the same format [as in the HTTP header](s. http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1)
   version: "1.0"
 schemes:
   - http
@@ -86,6 +89,21 @@ paths:
               user:
                 type: object
                 $ref: "#/definitions/UserWithPassword"
+    delete:
+      tags:
+        - requires login
+      summary: User deactivation
+      description: Deactivate the user currently logged in
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              status:
+                type: string
+                description: success/failure
   /users/sign_in:
     post:
       summary: User login
@@ -122,22 +140,6 @@ paths:
         - requires login
       summary: User logout
       description: Logout the user currently logged in
-      responses:
-        '200':
-          schema:
-            type: object
-            required:
-              - status
-            properties:
-              status:
-                type: string
-                description: success/failure
-  /users:
-    delete:
-      tags:
-        - requires login
-      summary: User deactivation
-      description: Deactivate the user currently logged in
       responses:
         '200':
           schema:
