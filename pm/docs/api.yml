@@ -1,0 +1,523 @@
+swagger: '2.0'
+info:
+  title: ExpirySync server
+  description: |
+    ExpirySync's JSON API documentation. 
+    All datetimes are currently passed and returned in the same format [as in the HTTP header](s. http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1)
+  version: "1.0"
+schemes:
+  - http
+  - https
+produces:
+  - application/json
+paths:
+  /alternate_servers:
+    get:
+      summary: Alternate servers
+      description: |
+        The Alternate servers endpoint returns a list of servers implementing the
+        same API as this. (Server's can be entered by anyone using the web interface).
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              alternate_servers:
+                description: An array of alternate servers
+                type: array
+                items:
+                  $ref: "#/definitions/AlternateServer"
+              status:
+                type: string
+                description: success/failure
+  /by_barcode/{barcode}:
+    get:
+      summary: Fetch article information for a barcode
+      description: |
+        Fetch article data from outside sources (if any) and the local database
+      parameters:
+        - name: barcode
+          in: query
+          type: string
+          description: barcode of the article to retrieve data for
+          required: true
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              article:
+                description: The requested article
+                type: object
+                $ref: "#/definitions/Article"
+              status:
+                type: string
+                description: success/failure
+      
+  /users:
+    post:
+      summary: User registration
+      description: Register a new user
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              user:
+                description: The newly registered user
+                type: object
+                $ref: "#/definitions/User"
+              status:
+                type: string
+                description: success/failure
+      parameters:
+        - name: user
+          in: body
+          required: true
+          description: User to register
+          schema:
+            properties:
+              user:
+                type: object
+                $ref: "#/definitions/UserWithPassword"
+  /users/sign_in:
+    post:
+      summary: User login
+      description: Login a user
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              user:
+                description: The logged in user
+                type: object
+                $ref: "#/definitions/User"
+              status:
+                type: string
+                description: success/failure
+      parameters:
+        - name: user
+          in: body
+          required: true
+          description: User to login
+          schema:
+            required:
+              - user
+            properties:
+              user:
+                type: object
+                $ref: "#/definitions/LoginData"
+  /users/sign_out:
+    delete:
+      tags:
+        - requires login
+      summary: User logout
+      description: Logout the user currently logged in
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              status:
+                type: string
+                description: success/failure
+  /users:
+    delete:
+      tags:
+        - requires login
+      summary: User deactivation
+      description: Deactivate the user currently logged in
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              status:
+                type: string
+                description: success/failure
+  /locations/index_mine_changed:
+    get:
+      tags:
+        - requires login
+      summary: Retrieve logged in user's locations, that have been changed
+      parameters:
+        - name: from_timestamp
+          in: query
+          type: datetime
+          description: "Fetch locations changed after this timestamp. When left empty, all locations are retrieved."
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              locations:
+                description: The current locations
+                type: array
+                items:
+                  $ref: "#/definitions/Location"
+              deleted_locations:
+                description: "Locations deleted since `from_timestamp`"
+                type: array
+                items:
+                  $ref: "#/definitions/Location"
+              status:
+                type: string
+                description: success/failure
+  /locations:
+    post:
+      tags:
+        - requires login
+      summary: create a location
+      parameters:
+        - name: location
+          in: body
+          type: object
+          required: true
+          description: the location to create
+          schema:
+            $ref: "#/definitions/Location"
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              location:
+                description: The created location
+                type: object
+                $ref: "#/definitions/ReturnedLocation"
+              status:
+                type: string
+                description: success/failure
+  /locations/{id}:
+    put:
+      tags:
+        - requires login
+      summary: update a location
+      parameters:
+        - name: id
+          in: query
+          type: integer
+          required: true
+          description: the location id
+        - name: location
+          in: body
+          type: object
+          required: true
+          description: "the location's data"
+          schema:
+            $ref: "#/definitions/Location"
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              location:
+                description: The updated location
+                type: object
+                $ref: "#/definitions/ReturnedLocation"
+              status:
+                type: string
+                description: success/failure
+    delete:
+      tags:
+        - requires login
+      summary: delete a location
+      parameters:
+        - name: id
+          in: query
+          type: integer
+          required: true
+          description: the location id
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              status:
+                type: string
+                description: success/failure
+  /locations/{location_id}/product_entries/index_changed:
+    get:
+      tags:
+        - requires login
+      summary: fetch changed product entries for a location
+      parameters:
+        - name: location_id
+          in: query
+          type: integer
+          required: true
+          description: the location id
+        - name: from_timestamp
+          in: query
+          type: datetime
+          description: "Fetch product entries changed after this timestamp. When left empty, all entries are retrieved."
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              locations:
+                description: The current product entries
+                type: array
+                items:
+                  $ref: "#/definitions/ReturnedProductEntry"
+              deleted_locations:
+                description: "Product entries deleted since `from_timestamp`"
+                type: array
+                items:
+                  $ref: "#/definitions/ReturnedProductEntry"
+              status:
+                type: string
+                description: success/failure
+  /locations/{location_id}/product_entries:
+    post:
+      tags:
+        - requires login
+      summary: update a product entry
+      parameters:
+        - name: location_id
+          in: query
+          type: integer
+          required: true
+          description: the location id the product entry belongs to
+        - name: product_entry
+          in: body
+          type: object
+          required: true
+          description: "the entry's data"
+          schema:
+            $ref: "#/definitions/ProductEntry"
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              product_entry:
+                description: The created product entry
+                type: object
+                $ref: "#/definitions/ReturnedProductEntry"
+              status:
+                type: string
+                description: success/failure
+  /locations/{location_id}/product_entries/{id}:
+    put:
+      tags:
+        - requires login
+      summary: update a product entry
+      parameters:
+        - name: location_id
+          in: query
+          type: integer
+          required: true
+          description: the location id the product entry belongs to
+        - name: id
+          in: query
+          type: integer
+          required: true
+          description: "the product entry's id"
+        - name: product_entry
+          in: body
+          type: object
+          required: true
+          description: "the entry's data"
+          schema:
+            $ref: "#/definitions/ProductEntry"
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              product_entry:
+                description: The updated product entry
+                type: object
+                $ref: "#/definitions/ReturnedProductEntry"
+              status:
+                type: string
+                description: success/failure
+    delete:
+      tags:
+        - requires login
+      summary: delete a product entry
+      parameters:
+        - name: location_id
+          in: query
+          type: integer
+          required: true
+          description: the location id the product entry belongs to
+        - name: id
+          in: query
+          type: integer
+          required: true
+          description: "the product entry's id"
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              status:
+                type: string
+                description: success/failure
+          
+definitions:
+  User:
+    type: object
+    required:
+      - id 
+      - username
+      - email
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+      email:
+        type: string
+      created_at:
+        type: datetime
+      updated_id:
+        type: datetime
+      deleted_at:
+        type: datetime
+  LoginData:
+    type: object
+    required:
+      - login
+      - password
+    properties:
+      login:
+        type: string
+        description: can be either the username or the email address
+      password:
+        type: string
+  UserWithPassword:
+    type: object
+    required:
+      - username
+      - email
+      - password
+    properties:
+      username:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+  AlternateServer:
+    type: object
+    required:
+      - url
+      - name
+      - description
+    properties:
+      url:
+        description: URL of the alternate server
+        type: string
+      name:
+        type: string
+        description: Name of the alternate server
+      description:
+        type: string
+        description: Description of the alternate server
+  Article:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      barcode:
+        type: string
+      images:
+        type: array
+        properties:
+          id:
+            type: integer
+      created_at:
+        type: datetime
+      updated_id:
+        type: datetime
+  Location:
+    type: object
+    properties:
+      name:
+        type: string
+      created_at:
+        type: datetime
+      updated_id:
+        type: datetime
+      deleted_at:
+        type: datetime
+  ReturnedLocation:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      created_at:
+        type: datetime
+      updated_id:
+        type: datetime
+      deleted_at:
+        type: datetime
+  ProductEntry:
+    type: object
+    properties:
+      description:
+        type: string
+      amount:
+        type: integer
+      expiration_date:
+        type: date
+      created_at:
+        type: datetime
+      updated_id:
+        type: datetime
+      deleted_at:
+        type: datetime
+  ReturnedProductEntry:
+    type: object
+    properties:
+      id:
+        type: integer
+      description:
+        type: string
+      amount:
+        type: integer
+      expiration_date:
+        type: date
+      created_at:
+        type: datetime
+      updated_id:
+        type: datetime
+      deleted_at:
+        type: datetime

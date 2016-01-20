@@ -1,0 +1,8 @@
+[submodule "expiry_sync_client"]
+	path = expiry_sync_client
+	url = git@github.com:lentschi/expiry_sync_client.git
+	branch = master
+[submodule "expiry_sync_server"]
+	path = expiry_sync_server
+	url = git@github.com:lentschi/expiry_sync_server.git
+	branch = master
