@@ -1,0 +1,30 @@
+FROM ubuntu:16.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+VOLUME /srv/project
+VOLUME /srv/config
+VOLUME /srv/salt
+
+RUN apt-get update \
+&& apt-get -y dist-upgrade \
+&& apt-get -y install salt-minion
+
+# SaltStack fail hard if any state fails
+ADD ./minion.yml /etc/salt/minion
+
+# Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ARG config_path
+ADD ${config_path}/salt /srv/salt
+ADD ${config_path} /srv/config
+
+# Apply salt states
+RUN ["salt-call", "--local", "state.apply"]
+
+# Start services (and install missing packages if any), then tailf a log file:
+ADD ./run_salt_and_tailf.sh /usr/bin/run_salt_and_tailf.sh
+ARG tailf_file=/var/log/syslog
+ENV DOCKER_TAILF_FILE ${tailf_file}
+CMD /usr/bin/run_salt_and_tailf.sh

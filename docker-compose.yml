@@ -1,0 +1,65 @@
+# This docker-compose file can currently only be used to set up
+# a local development environment, NOT a production server!
+version: '2'
+services:
+  app:
+    container_name: expiry_sync_app
+    hostname: expiry_sync_app
+    build:
+      context: ./setup
+      dockerfile: Dockerfile-salted-ubuntu-16.04
+      args:
+        config_path: ./app
+        tailf_file: /var/log/ionic-serve.log
+    volumes:
+      - ./expiry_sync_client:/srv/project
+      - ./setup/app/salt:/srv/salt
+      - ./setup/app:/srv/config
+    networks:
+      - expiry_sync-net
+  db:
+    container_name: expiry_sync_db
+    hostname: expiry_sync_db
+    build:
+      context: ./setup
+      dockerfile: Dockerfile-salted-ubuntu-16.04
+      args:
+        config_path: ./db
+        tailf_file: /var/log/postgresql/postgresql-9.5-main.log
+    volumes:
+      - ./expiry_sync_server:/srv/project
+      - ./setup/db/salt:/srv/salt
+      - ./setup/db:/srv/config
+    networks:
+      - expiry_sync-net
+  mail:
+    image: mailhog/mailhog
+    container_name: expiry_sync_mail
+    hostname: expiry_sync_mail
+    networks:
+      - expiry_sync-net
+  web:
+    container_name: expiry_sync_web
+    hostname: expiry_sync_web
+    build:
+      context: ./setup
+      dockerfile: Dockerfile-salted-ubuntu-16.04
+      args:
+        config_path: ./web
+        tailf_file: /var/log/rails.log
+    volumes:
+      - ./expiry_sync_server:/srv/project
+      - ./setup/web/salt:/srv/salt
+      - ./setup/web:/srv/config
+    depends_on:
+      - db
+      - mail
+    links:
+      - db:db-server
+      - mail:mail-server
+    networks:
+      - expiry_sync-net
+
+networks:
+  expiry_sync-net:
+    driver: bridge
