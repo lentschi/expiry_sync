@@ -5,9 +5,11 @@ info:
     ExpirySync's JSON API documentation.
     
     Created using [Swagger](http://swagger.io/) and exported using [bootprint-swagger](https://www.npmjs.com/package/bootprint-swagger)
+    
+    To obtain a working server/client combination implementing this API you may [see ExpirySync @ github](https://github.com/lentschi/expiry_sync).
 
-    __Note:__ All datetimes are currently passed and returned in the same format [as in the HTTP header](s. http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1)
-  version: "1.0"
+    __Important Note:__ All datetimes are currently passed and returned in the same format [as in the HTTP header](s. http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1).
+  version: "2.0"
 schemes:
   - http
   - https
@@ -192,7 +194,7 @@ paths:
           required: true
           description: the location to create
           schema:
-            $ref: "#/definitions/Location"
+            $ref: "#/definitions/LocationWrapper"
       responses:
         '200':
           schema:
@@ -224,7 +226,7 @@ paths:
           required: true
           description: "the location's data"
           schema:
-            $ref: "#/definitions/Location"
+            $ref: "#/definitions/LocationWrapper"
       responses:
         '200':
           schema:
@@ -259,6 +261,68 @@ paths:
               status:
                 type: string
                 description: success/failure
+  /locations/{location_id}/location_shares:
+    post:
+      tags:
+        - requires login
+      summary: create a location share
+      parameters:
+        - name: location_id
+          in: query
+          type: integer
+          required: true
+          description: the location to share
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: the user to share the location with
+          schema:
+            $ref: "#/definitions/UserWrapper"
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              user:
+                description: The added user
+                type: object
+                $ref: "#/definitions/User"
+              status:
+                type: string
+                description: success/failure
+  /locations/{location_id}/location_shares/{user_id}:
+    delete:
+      tags:
+        - requires login
+      summary: delete a location share
+      parameters:
+        - name: location_id
+          in: query
+          type: integer
+          required: true
+          description: the location id
+        - name: user_id
+          in: query
+          type: integer
+          required: true
+          description: the user id
+      responses:
+        '200':
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              user:
+                description: The removed user
+                type: object
+                $ref: "#/definitions/User"
+              status:
+                type: string
+                description: success/failure
   /locations/{location_id}/product_entries/index_changed:
     get:
       tags:
@@ -281,12 +345,12 @@ paths:
             required:
               - status
             properties:
-              locations:
+              product_entries:
                 description: The current product entries
                 type: array
                 items:
                   $ref: "#/definitions/ReturnedProductEntry"
-              deleted_locations:
+              deleted_product_entries:
                 description: "Product entries deleted since `from_timestamp`"
                 type: array
                 items:
@@ -298,7 +362,7 @@ paths:
     post:
       tags:
         - requires login
-      summary: update a product entry
+      summary: create a product entry
       parameters:
         - name: location_id
           in: query
@@ -311,7 +375,7 @@ paths:
           required: true
           description: "the entry's data"
           schema:
-            $ref: "#/definitions/ProductEntry"
+            $ref: "#/definitions/ProductEntryWrapper"
       responses:
         '200':
           schema:
@@ -323,6 +387,9 @@ paths:
                 description: The created product entry
                 type: object
                 $ref: "#/definitions/ReturnedProductEntry"
+              errors:
+                description: dictionary of posted fieldname -> validation error message
+                type: object
               status:
                 type: string
                 description: success/failure
@@ -348,7 +415,7 @@ paths:
           required: true
           description: "the entry's data"
           schema:
-            $ref: "#/definitions/ProductEntry"
+            $ref: "#/definitions/ProductEntryWrapper"
       responses:
         '200':
           schema:
@@ -409,6 +476,11 @@ definitions:
         type: datetime
       deleted_at:
         type: datetime
+  UserWrapper:
+    type: object
+    properties:
+      user:
+        $ref: "#/definitions/User"
   LoginData:
     type: object
     required:
@@ -478,6 +550,11 @@ definitions:
         type: datetime
       deleted_at:
         type: datetime
+  LocationWrapper:
+    type: object
+    properties:
+      location:
+        $ref: "#/definitions/Location"
   ReturnedLocation:
     type: object
     properties:
@@ -485,6 +562,8 @@ definitions:
         type: integer
       name:
         type: string
+      creator:
+        $ref: "#/definitions/User"
       created_at:
         type: datetime
       updated_id:
@@ -498,6 +577,8 @@ definitions:
         type: string
       amount:
         type: integer
+      free_to_take:
+        type: boolean
       expiration_date:
         type: date
       created_at:
@@ -506,6 +587,11 @@ definitions:
         type: datetime
       deleted_at:
         type: datetime
+  ProductEntryWrapper:
+    type: object
+    properties:
+      product_entry:
+        $ref: "#/definitions/ProductEntry"
   ReturnedProductEntry:
     type: object
     properties:
@@ -515,8 +601,12 @@ definitions:
         type: string
       amount:
         type: integer
+      free_to_take:
+        type: boolean
       expiration_date:
         type: date
+      creator:
+        $ref: "#/definitions/User"
       created_at:
         type: datetime
       updated_id:
