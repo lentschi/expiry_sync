@@ -11,6 +11,7 @@ rm /usr/local/bin/build-android-* || true
 ln -s /srv/config/build_scripts/build-android-dev.sh /usr/local/bin/build-android-dev
 ln -s /srv/config/build_scripts/build-android-prod.sh /usr/local/bin/build-android-prod
 ln -s /srv/config/build_scripts/build-android-release.sh /usr/local/bin/build-android-release
+ln -s /srv/config/build_scripts/build-web-release.sh /usr/local/bin/build-web-release
 
 npm install -g ionic@3.1.2 cordova@7.0.1
 cordova telemetry off

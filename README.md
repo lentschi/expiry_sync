@@ -93,7 +93,13 @@ docker-compose exec app build-android-release <version-code> <default-host>
 # The <default-host> should be the URL to API-server you want to use.
 ```
 
-### iOS, Windows, browser
+### Web version
+
+Another example using a wrapper scripts for [ionic commands](https://ionicframework.com/docs/cli/) - so, if you know what you're doing, you can of course use those commands directly instead:
+
+`docker-compose exec app build-web-release <default-host>`
+
+### iOS, Windows
 
 This hasn't been tried yet, but it's possible in theory as the platforms are supported by ionic.
 
