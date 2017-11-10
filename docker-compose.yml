@@ -57,6 +57,8 @@ services:
     links:
       - db:db-server
       - mail:mail-server
+    ports:
+      - 8012:80
     networks:
       - expiry_sync-net
 

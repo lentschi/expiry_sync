@@ -15,8 +15,12 @@ cp -p src/app/models/setting.ts /tmp
 ionic cordova platform remove browser
 ionic cordova platform add browser
 cp -p /tmp/config.xml ./
-/srv/config/build_scripts/adept_default_host_setting.rb /srv/project/src/app/models/setting.ts "$2"
+export LC_ALL=C.UTF-8
+/srv/config/build_scripts/adept_default_host_setting.rb /srv/project/src/app/models/setting.ts "$1"
 ionic cordova build browser --prod
+cp -Rfp platforms/browser /tmp
+ionic cordova platform remove browser
+cp -Rfp /tmp/browser platforms
 cp -p /tmp/config.xml ./
 cp -p /tmp/package.json ./
 cp -p /tmp/npm-shrinkwrap.json ./
