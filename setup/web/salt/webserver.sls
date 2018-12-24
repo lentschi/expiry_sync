@@ -28,7 +28,18 @@ libpq-dev:
 sudo:
   pkg:
     - installed
-
+imagemagick:
+  pkg:
+    - installed
+libmagickwand-dev:
+  pkg:
+    - installed
+mysql-client:
+  pkg:
+    - installed
+libmysqlclient-dev:
+  pkg:
+    - installed
 install rvm:
   cmd.run:
     -
@@ -43,6 +54,10 @@ install rvm:
           - pkg: libxml2
           - pkg: libxml2-dev
           - pkg: libpq-dev
+          - pkg: imagemagick
+          - pkg: libmagickwand-dev
+          - pkg: mysql-client
+          - pkg: libmysqlclient-dev
           
 run rails:
   cmd.run:

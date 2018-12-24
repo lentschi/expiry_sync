@@ -18,18 +18,12 @@ services:
     networks:
       - expiry_sync-net
   db:
-    container_name: expiry_sync_db
+    image: mysql
     hostname: expiry_sync_db
-    build:
-      context: ./setup
-      dockerfile: Dockerfile-salted-ubuntu-16.04
-      args:
-        config_path: ./db
-        tailf_file: /var/log/postgresql/postgresql-9.5-main.log
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
     volumes:
-      - ./expiry_sync_server:/srv/project
-      - ./setup/db/salt:/srv/salt
-      - ./setup/db:/srv/config
+      - ./setup/db/mysql/sql:/docker-entrypoint-initdb.d
     networks:
       - expiry_sync-net
   mail:

@@ -25,6 +25,9 @@ git:
 ruby:
   pkg:
     - installed
+build-essential:
+  pkg:
+    - installed
 
 install gradle:
   cmd.run:
@@ -38,6 +41,7 @@ install gradle:
           - pkg: unzip
           - pkg: zip
           - pkg: expect
+          - pkg: build-essential
 prepare ionic:
   cmd.run:
     -

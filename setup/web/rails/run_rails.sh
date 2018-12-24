@@ -21,4 +21,4 @@ ln -s /srv/config/rails/mail.rb /srv/project/config/initializers/mail.rb
 
 bundle exec rake db:migrate || bundle exec rake db:setup && bundle exec rake db:migrate
 
-EMAIL_LINK_HOST="expiry-sync-web.local" bundle exec rails s -p 80 -d
+EMAIL_LINK_HOST="expiry-sync-web.local" bundle exec rails s -p 80 -b 0.0.0.0 -d
