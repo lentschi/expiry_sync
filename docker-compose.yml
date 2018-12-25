@@ -6,20 +6,24 @@ services:
     container_name: expiry_sync_app
     hostname: expiry_sync_app
     build:
-      context: ./setup
-      dockerfile: Dockerfile-salted-ubuntu-16.04
+      context: ./setup/app
+      dockerfile: Dockerfile
       args:
-        config_path: ./app
-        tailf_file: /var/log/ionic-serve.log
+        config_path: .
+        user_id: ${USER_ID}
+        group_id: ${GROUP_ID}
     volumes:
       - ./expiry_sync_client:/srv/project
-      - ./setup/app/salt:/srv/salt
+      - ./.git:/srv/.git
+      - ./expiry_sync_client:/srv/expiry_sync_client
+      - ./expiry_sync_server:/srv/expiry_sync_server
       - ./setup/app:/srv/config
     networks:
       - expiry_sync-net
   db:
     image: mysql
     hostname: expiry_sync_db
+    container_name: expiry_sync_db
     environment:
       - MYSQL_ROOT_PASSWORD=admin
     volumes:
@@ -36,14 +40,15 @@ services:
     container_name: expiry_sync_web
     hostname: expiry_sync_web
     build:
-      context: ./setup
-      dockerfile: Dockerfile-salted-ubuntu-16.04
+      context: ./setup/web
+      dockerfile: Dockerfile
       args:
-        config_path: ./web
+        user_id: ${USER_ID}
+        group_id: ${GROUP_ID}
+        config_path: .
         tailf_file: /var/log/rails.log
     volumes:
       - ./expiry_sync_server:/srv/project
-      - ./setup/web/salt:/srv/salt
       - ./setup/web:/srv/config
     depends_on:
       - db

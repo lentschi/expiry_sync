@@ -1,7 +1,8 @@
 #!/bin/bash -e
 
-NODE_VERSION="10.14.2"
-NPM_VERSION="6.4.1"
+NODE_VERSION="8.9.4"
+NPM_VERSION="5.5.1"
+ANGULAR_CLI_VERSION="1.6.8"
 
 if [ ! -d "/home/web/n" ]; then
   cd /tmp
@@ -12,10 +13,9 @@ if [ ! -d "/home/web/n" ]; then
 
   n "$NODE_VERSION"
   npm i -g "npm@$NPM_VERSION"
+  npm i -g "@angular/cli@$ANGULAR_CLI_VERSION"
 
   sudo setcap CAP_NET_BIND_SERVICE=+eip /home/web/n/bin/node
-  npm install -g ionic@4.6.0 cordova@8.1.2
-  cordova telemetry off
 fi
 
 sudo ln -s /srv/config/restart.sh /usr/local/bin/restart-server

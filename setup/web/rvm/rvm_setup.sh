@@ -9,7 +9,7 @@ if [ ! -f /etc/profile.d/rvm.sh ]; then
 	curl -sSL https://get.rvm.io | bash
 fi
 
-# activate it for root
+# activate it for the user web
 source /etc/profile.d/rvm.sh
 
 # use rvm to install project specifics:
