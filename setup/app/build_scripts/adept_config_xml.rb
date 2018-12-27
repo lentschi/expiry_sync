@@ -19,11 +19,6 @@ new_contents = ""
 contents.split("\n").each do |line|
   line.gsub!(/android-versionCode=".+?"/, "android-versionCode=\"#{versionCode}\"")
 
-  next if line.match(/density="ldpi/)
-  next if line.match(/density="land/)
-  next if line.match(/density="port/)
-  next if line.match(/android-minSdkVersion/) if crosswalk
-
   new_contents += "\n" + line
 end
 

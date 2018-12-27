@@ -10,7 +10,7 @@ if [ ! -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
 fi
 
 source "$HOME/.sdkman/bin/sdkman-init.sh"
-sdk install gradle 3.2
+sdk install gradle 4.1
 
 # Android SDK:
 # s. http://stackoverflow.com/questions/17963508/how-to-install-android-sdk-build-tools-on-the-command-line
@@ -24,7 +24,7 @@ if [ ! -d /opt/android-sdk-linux ]; then
   # install sdk & accept license:
   expect -c '
   set timeout -1   ;
-  spawn sdkmanager --install "platforms;android-25";
+  spawn sdkmanager --install "platforms;android-27";
   expect {
       "Accept? (y/N)" { exp_send "y\r" ; exp_continue }
       eof
@@ -32,5 +32,8 @@ if [ ! -d /opt/android-sdk-linux ]; then
   '
 
   # install build tools:
-  sdkmanager --install "build-tools;26.0.0"
+  sdkmanager --install "build-tools;26.0.2"
+
+  chgrp web /opt/android-sdk-linux -R
+  chmod g+rw /opt/android-sdk-linux -R
 fi

@@ -1,14 +1,10 @@
-#!/bin/bash -ve
+#!/bin/bash -e
 
+source /home/web/.rvm/scripts/rvm
 
-if [ -z "$DOCKER_RUNNING" ]; then
-  echo "run_rails.sh: cannot be installed during build as postgresql won't be available"
-  exit 1
-fi
-
-source /etc/profile.d/rvm.sh
+set -v
 cd /srv/project
-rvm install `cat .ruby-version`
+  rvm install `cat .ruby-version`
 cd /
 cd /srv/project
 gem install bundler
@@ -21,4 +17,4 @@ ln -s /srv/config/rails/mail.rb /srv/project/config/initializers/mail.rb
 
 bundle exec rake db:migrate || bundle exec rake db:setup && bundle exec rake db:migrate
 
-EMAIL_LINK_HOST="expiry-sync-web.local" bundle exec rails s -p 80 -b 0.0.0.0 -d
+EMAIL_LINK_HOST="expiry-sync-web.local" authbind --deep bundle exec thin start --ssl --ssl-cert-file /srv/config/cert/expirysync_server.crt --ssl-key-file /srv/config/cert/expirysync_server.cert.key --port 443

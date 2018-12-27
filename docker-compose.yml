@@ -46,7 +46,6 @@ services:
         user_id: ${USER_ID}
         group_id: ${GROUP_ID}
         config_path: .
-        tailf_file: /var/log/rails.log
     volumes:
       - ./expiry_sync_server:/srv/project
       - ./setup/web:/srv/config
@@ -57,7 +56,9 @@ services:
       - db:db-server
       - mail:mail-server
     ports:
-      - 8012:80
+      - 443:443
+    expose:
+      - "443"
     networks:
       - expiry_sync-net
 

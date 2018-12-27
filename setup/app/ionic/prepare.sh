@@ -11,6 +11,7 @@ sudo rm /usr/local/bin/build-* || true
 sudo ln -s /srv/config/build_scripts/build-android-dev.sh /usr/local/bin/build-android-dev
 sudo ln -s /srv/config/build_scripts/build-android-prod.sh /usr/local/bin/build-android-prod
 sudo ln -s /srv/config/build_scripts/build-android-release.sh /usr/local/bin/build-android-release
+sudo ln -s /srv/config/build_scripts/build-android-new.sh /usr/local/bin/build-android-new
 sudo ln -s /srv/config/build_scripts/build-web-release.sh /usr/local/bin/build-web-release
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
