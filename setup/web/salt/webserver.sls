@@ -28,12 +28,6 @@ libpq-dev:
 sudo:
   pkg:
     - installed
-libmagickwand-dev:
-  pkg:
-    - installed
-imagemagick:
-  pkg:
-    - installed
 
 install rvm:
   cmd.run:
@@ -49,8 +43,6 @@ install rvm:
           - pkg: libxml2
           - pkg: libxml2-dev
           - pkg: libpq-dev
-          - pkg: libmagickwand-dev 
-          - pkg: imagemagick
           
 run rails:
   cmd.run:
