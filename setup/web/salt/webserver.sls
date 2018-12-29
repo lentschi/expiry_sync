@@ -22,7 +22,7 @@ libxslt1-dev:
 nodejs:
   pkg:
     - installed
-libpq-dev:
+libmysqlclient-dev:
   pkg:
     - installed
 sudo:
@@ -48,7 +48,7 @@ install rvm:
           - pkg: libxslt1-dev
           - pkg: libxml2
           - pkg: libxml2-dev
-          - pkg: libpq-dev
+          - pkg: libmysqlclient-dev
           - pkg: libmagickwand-dev 
           - pkg: imagemagick
           

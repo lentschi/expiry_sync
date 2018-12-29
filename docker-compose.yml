@@ -17,9 +17,9 @@ services:
       - ./setup/app:/srv/config
     networks:
       - expiry_sync-net
-  db:
-    container_name: expiry_sync_db
-    hostname: expiry_sync_db
+  postgres:
+    container_name: expiry_sync_postgres
+    hostname: expiry_sync_postgres
     build:
       context: ./setup
       dockerfile: Dockerfile-salted-ubuntu-16.04
@@ -30,6 +30,21 @@ services:
       - ./expiry_sync_server:/srv/project
       - ./setup/db/salt:/srv/salt
       - ./setup/db:/srv/config
+    networks:
+      - expiry_sync-net
+  db:
+    container_name: expiry_sync_db
+    image: mysql:5.7 # https://hub.docker.com/_/mysql/ - or mariadb https://hub.docker.com/_/mariadb
+    volumes:
+      - ./expiry_sync_server:/srv/project
+      # - ./setup/mysql/salt:/srv/salt
+      - ./setup/mysql:/srv/config
+      # scripts to be executed as user 'mysql'; will also import any sql files:
+      - ./setup/mysql/autoexec:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_DATABASE: expiry_sync
+      MYSQL_ROOT_PASSWORD: password
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     networks:
       - expiry_sync-net
   mail:

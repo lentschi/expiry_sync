@@ -3,13 +3,21 @@
 #
 #   Ensure the SQLite 3 gem is defined in your Gemfile
 #   gem 'sqlite3'
+# development:
+  # adapter: postgresql
+  # host: expiry_sync_postgres
+  # username: expiry_sync
+  # password: admin
+  # database: expiry_sync
+  # template: template0
+
 development:
-  adapter: postgresql
+  adapter: mysql2
   host: db-server
-  username: expiry_sync
-  password: admin
+  username: root
+  password: password
   database: expiry_sync
-  template: template0
+  encoding: utf8
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -20,10 +28,18 @@ test:
   pool: 5
   timeout: 5000
 
+# production:
+#   adapter: postgresql
+#   host: expiry_sync_postgres
+#   username: expiry_sync
+#   password: admin
+#   database: expiry_sync
+#   template: template0
+
 production:
-  adapter: postgresql
+  adapter: mysql2
   host: db-server
-  username: expiry_sync
-  password: admin
+  username: root
+  password: password
   database: expiry_sync
-  template: template0
+  encoding: utf8
