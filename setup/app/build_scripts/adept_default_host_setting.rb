@@ -15,7 +15,7 @@ contents.gsub!("\r", "")
 
 new_contents = ""
 contents.split("\n").each do |line|
-  line.gsub!(/host: \{default: '(.+?)'/, "host: {default: '#{host}'")
+  line.gsub!(/host: \{\s*default:\s*'(.+?)'/, "host: { default: '#{host}'")
 
   new_contents += "\n" + line
 end

@@ -57,8 +57,10 @@ services:
       - mail:mail-server
     ports:
       - 443:443
+      - 80:80
     expose:
       - "443"
+      - "80"
     networks:
       - expiry_sync-net
 
