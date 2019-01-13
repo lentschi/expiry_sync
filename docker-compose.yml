@@ -1,23 +1,27 @@
 # This docker-compose file can currently only be used to set up
 # a local development environment, NOT a production server!
-version: '2'
+version: '2.1'
 services:
   app:
     container_name: expiry_sync_app
     hostname: expiry_sync_app
     build:
-      context: ./setup/app
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: setup/app/Dockerfile
       args:
-        config_path: .
+        config_path: ./setup/app
         user_id: ${USER_ID}
         group_id: ${GROUP_ID}
+        backend_path: ./expiry_sync_server
+        backend_config: ./setup/web
     volumes:
       - ./expiry_sync_client:/srv/project
       - ./.git:/srv/.git
       - ./expiry_sync_client:/srv/expiry_sync_client
       - ./expiry_sync_server:/srv/expiry_sync_server
       - ./setup/app:/srv/config
+      - ./setup/web:/srv/web_config
+      - ${TMP_X11}:/tmp/.X11-unix
     networks:
       - expiry_sync-net
   db:
@@ -40,12 +44,13 @@ services:
     container_name: expiry_sync_web
     hostname: expiry_sync_web
     build:
-      context: ./setup/web
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: setup/web/Dockerfile
       args:
         user_id: ${USER_ID}
         group_id: ${GROUP_ID}
-        config_path: .
+        config_path: ./setup/web
+        project_path: ./expiry_sync_server
     volumes:
       - ./expiry_sync_server:/srv/project
       - ./setup/web:/srv/config

@@ -4,10 +4,6 @@ source /home/web/.rvm/scripts/rvm
 
 set -v
 cd /srv/project
-  rvm install `cat .ruby-version`
-cd /
-cd /srv/project
-gem install bundler
 bundle install --without heroku_production_server heroku_production_db production
 
 rm /srv/project/config/database.yml || true
