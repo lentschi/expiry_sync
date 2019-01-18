@@ -111,3 +111,7 @@ Please either see the submodules' READMEs or read the commands/scripts called by
 
 See the submodules' READMEs.
 
+
+# TODO
+
+DISPLAY=:0 node --inspect=0.0.0.0:9200 ./node_modules/.bin/protractor ./e2e/protractor.conf.js

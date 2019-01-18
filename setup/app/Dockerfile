@@ -9,7 +9,11 @@ RUN apt-get update \
 && apt-get -y dist-upgrade \
 && apt install -y net-tools build-essential iproute2 git wget unzip bzip2 \
 zip curl vim iputils-ping nmap sudo openjdk-8-jre openjdk-8-jdk expect \
-ruby gnupg2 authbind imagemagick libxml2 libxml2-dev libxslt1-dev libmagickwand-dev
+ruby gnupg2 authbind
+
+# backend packages for e2e testing:
+RUN apt install -y ruby gnupg2 imagemagick libxml2 libxml2-dev libxslt1-dev \
+libmagickwand-dev
 
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
 && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
@@ -28,8 +32,8 @@ USER web:web
 
 RUN echo "alias tailf=\"tail -f\"" >> ~/.bash_aliases 
 
-# RUN mkdir ~/.gnupg
-# RUN echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf
+RUN mkdir ~/.gnupg
+RUN echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf
 
 ARG config_path
 ADD ${config_path} /srv/config
