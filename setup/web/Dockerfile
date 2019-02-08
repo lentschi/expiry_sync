@@ -26,8 +26,10 @@ RUN echo "web ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 USER web:web
 
-# RUN echo "alias tailf=\"tail -f\"" >> ~/.bash_aliases 
-# RUN echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf
+RUN echo "alias tailf=\"tail -f\"" >> ~/.bash_aliases 
+
+RUN mkdir ~/.gnupg
+RUN echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf
 
 ARG config_path
 ADD ${config_path} /srv/config
