@@ -22,6 +22,7 @@ services:
       - ./setup/app:/srv/config
       - ./setup/web:/srv/web_config
       - ${TMP_X11}:/tmp/.X11-unix
+      - ${DEV_SHM}:/dev/shm
     networks:
       - expiry_sync-net
   db:

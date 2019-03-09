@@ -22,3 +22,8 @@ npm install
 
 # Fix babili bug:
 #find ./node_modules/@ionic/app-scripts/dist/babili.js -type f -exec sed -i 's/IONIC_USE_EXPERIMENTAL_BABILI/IONIC_BABILI/;s/ionic_use_experimental_babili/ionic_babili/' {} \;
+
+# Clear temporary testing files (in case the tests crashed during the previous run):
+rm /tmp/*.pid || true
+rm /tmp/test.sqlite3 || true
+rm /srv/expiry_sync_server/db/test.sqlite3 || true
