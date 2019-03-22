@@ -4,7 +4,7 @@ source /home/web/.rvm/scripts/rvm
 
 set -v
 cd /srv/project
-bundle install --without heroku production
+bundle install --without heroku production --with local_docker_compose
 
 rm /srv/project/config/database.yml || true
 ln -s /srv/config/rails/database.yml /srv/project/config/database.yml
