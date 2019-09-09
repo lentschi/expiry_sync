@@ -10,7 +10,7 @@ if [ ! -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
 fi
 
 source "$HOME/.sdkman/bin/sdkman-init.sh"
-sdk install gradle 4.1
+sdk install gradle 4.10.3
 
 # Android SDK:
 # s. http://stackoverflow.com/questions/17963508/how-to-install-android-sdk-build-tools-on-the-command-line
