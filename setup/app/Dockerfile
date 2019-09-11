@@ -9,7 +9,7 @@ RUN apt-get update \
 && apt-get -y dist-upgrade \
 && apt install -y net-tools build-essential iproute2 git wget unzip bzip2 \
 zip curl vim iputils-ping nmap sudo openjdk-8-jre openjdk-8-jdk expect \
-ruby gnupg2 authbind
+ruby gnupg2 authbind qemu-kvm libvirt-bin
 
 # backend packages for e2e testing:
 RUN apt install -y ruby gnupg2 imagemagick libxml2 libxml2-dev libxslt1-dev \
@@ -22,15 +22,16 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 
 ARG group_id
 RUN groupadd -g ${group_id} web
+RUN groupadd libvirtd
 
 ARG user_id
-RUN useradd -g web -m -u ${user_id} web
+RUN useradd -g web -G kvm,libvirtd -m -u ${user_id} web
 
 RUN echo "web ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 USER web:web
 
-RUN echo "alias tailf=\"tail -f\"" >> ~/.bash_aliases 
+RUN echo "alias tailf=\"tail -f\"" >> ~/.bash_aliases
 
 RUN mkdir ~/.gnupg
 RUN echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf
@@ -51,6 +52,7 @@ RUN gpg --version
 RUN /srv/web_config/rvm/rvm_setup.sh
 
 RUN sudo /srv/config/gradle/gradle_setup.sh
+RUN /srv/config/ionic/add_emulator.sh
 RUN /srv/config/ionic/node_setup.sh
 
 CMD /srv/config/ionic/run.sh >> /home/web/run.log 2>&1; tail -F /home/web/run.log

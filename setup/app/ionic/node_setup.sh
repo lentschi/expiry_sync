@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-NODE_VERSION="10.15.0"
-NPM_VERSION="6.4.1"
+NODE_VERSION="10.16.2"
+NPM_VERSION="6.9.0"
 
 if [ ! -d "/home/web/n" ]; then
   cd /tmp
@@ -14,7 +14,7 @@ if [ ! -d "/home/web/n" ]; then
   npm i -g "npm@$NPM_VERSION"
 
   sudo setcap CAP_NET_BIND_SERVICE=+eip /home/web/n/bin/node
-  npm install -g ionic@4.6.0 cordova@8.1.2
+  npm install -g ionic@5.2.4 cordova@9.0.0 native-run@0.2.8 cordova-res@0.6.0
   cordova telemetry off
 fi
 
