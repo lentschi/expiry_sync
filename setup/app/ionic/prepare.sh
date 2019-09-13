@@ -13,6 +13,7 @@ sudo ln -s /srv/config/build_scripts/build-android-prod.sh /usr/local/bin/build-
 sudo ln -s /srv/config/build_scripts/build-android-release.sh /usr/local/bin/build-android-release
 sudo ln -s /srv/config/build_scripts/build-android-new.sh /usr/local/bin/build-android-new
 sudo ln -s /srv/config/build_scripts/build-web-release.sh /usr/local/bin/build-web-release
+sudo ln -s /srv/config/build_scripts/build-and-run-in-android-emulator.sh /usr/local/bin/build-and-run-in-android-emulator
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 cd /srv/project

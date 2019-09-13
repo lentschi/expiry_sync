@@ -25,6 +25,9 @@ services:
       - ${DEV_SHM}:/dev/shm
     networks:
       - expiry_sync-net
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
   db:
     image: mysql
     hostname: expiry_sync_db

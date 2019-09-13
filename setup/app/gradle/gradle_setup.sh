@@ -33,7 +33,10 @@ if [ ! -d /opt/android-sdk-linux ]; then
 
   # install build tools:
   sdkmanager --install "build-tools;26.0.2"
+  sdkmanager --install "platform-tools"
+  sdkmanager --install "system-images;android-27;google_apis;x86"
 
   chgrp web /opt/android-sdk-linux -R
   chmod g+rw /opt/android-sdk-linux -R
+  find /opt/android-sdk-linux -executable -type f -exec chmod g+x {} \;
 fi
