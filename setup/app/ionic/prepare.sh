@@ -8,12 +8,14 @@ if [ ! -f "/srv/project/package.json" ]; then
 fi
 
 sudo rm /usr/local/bin/build-* || true
+sudo rm /usr/local/bin/run_* || true
 sudo ln -s /srv/config/build_scripts/build-android-dev.sh /usr/local/bin/build-android-dev
 sudo ln -s /srv/config/build_scripts/build-android-prod.sh /usr/local/bin/build-android-prod
 sudo ln -s /srv/config/build_scripts/build-android-release.sh /usr/local/bin/build-android-release
 sudo ln -s /srv/config/build_scripts/build-android-new.sh /usr/local/bin/build-android-new
 sudo ln -s /srv/config/build_scripts/build-web-release.sh /usr/local/bin/build-web-release
 sudo ln -s /srv/config/build_scripts/build-and-run-in-android-emulator.sh /usr/local/bin/build-and-run-in-android-emulator
+sudo ln -s /srv/config/ionic/run_e2e_tests.sh /usr/local/bin/run_e2e_tests
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 cd /srv/project

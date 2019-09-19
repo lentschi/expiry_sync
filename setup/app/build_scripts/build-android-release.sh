@@ -11,6 +11,8 @@ rm platforms/android/app/build/outputs/apk/release/* || true
 cp -p config.xml /tmp
 cp -p package.json /tmp
 cp -p package-lock.json /tmp
+/srv/config/ionic/prepare.sh
+export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 ionic cordova platform remove android
 ionic cordova platform add android
 cp -p /tmp/config.xml ./
