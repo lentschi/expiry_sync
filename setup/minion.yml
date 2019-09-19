@@ -1,5 +1,0 @@
-# run masterless
-file_client: local
-
-# do not continue on errors
-failhard: True

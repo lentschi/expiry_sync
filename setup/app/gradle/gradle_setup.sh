@@ -1,7 +1,7 @@
 #!/bin/bash -ve
 
 rm /etc/profile.d/android.sh || true
-ln -s /srv/config/gradle/android.sh /etc/profile.d
+sudo ln -s /srv/config/gradle/android.sh /etc/profile.d
 chown root:root /etc/profile.d/android.sh
 source /etc/profile.d/android.sh
 
@@ -10,15 +10,7 @@ if [ ! -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
 fi
 
 source "$HOME/.sdkman/bin/sdkman-init.sh"
-sdk install gradle 3.2
-
-if [ ! -f "/usr/bin/npm" ]; then
-  cd /tmp
-  curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh
-  bash nodesource_setup.sh
-  apt install nodejs -y
-  npm i -g npm@4.6.1
-fi
+sdk install gradle 4.10.3
 
 # Android SDK:
 # s. http://stackoverflow.com/questions/17963508/how-to-install-android-sdk-build-tools-on-the-command-line
@@ -32,7 +24,7 @@ if [ ! -d /opt/android-sdk-linux ]; then
   # install sdk & accept license:
   expect -c '
   set timeout -1   ;
-  spawn tools/bin/sdkmanager "platforms;android-25";
+  spawn sdkmanager --install "platforms;android-27";
   expect {
       "Accept? (y/N)" { exp_send "y\r" ; exp_continue }
       eof
@@ -40,5 +32,11 @@ if [ ! -d /opt/android-sdk-linux ]; then
   '
 
   # install build tools:
-  tools/bin/sdkmanager "build-tools;26.0.0"
+  sdkmanager --install "build-tools;26.0.2"
+  sdkmanager --install "platform-tools"
+  sdkmanager --install "system-images;android-27;google_apis;x86"
+
+  chgrp web /opt/android-sdk-linux -R
+  chmod g+rw /opt/android-sdk-linux -R
+  find /opt/android-sdk-linux -executable -type f -exec chmod g+x {} \;
 fi

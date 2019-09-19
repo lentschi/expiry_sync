@@ -1,21 +1,21 @@
-#!/bin/bash -v
-
-set -e
+#!/bin/bash -ve
 
 # install rvm
-if [ ! -f /etc/profile.d/rvm.sh ]; then
-  gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
-	cd /tmp
-	curl -sSL https://get.rvm.io | bash
-fi
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+cd /tmp
+curl -sSL https://get.rvm.io | bash
 
-# activate it for root
-source /etc/profile.d/rvm.sh
+# Allow ruby to serve on port 80 and 443:
+sudo touch /etc/authbind/byport/80
+sudo touch /etc/authbind/byport/443
+sudo chmod 777 /etc/authbind/byport/80
+sudo chmod 777 /etc/authbind/byport/443
 
-# use rvm to install project specifics:
+source /home/web/.rvm/scripts/rvm
+
+set -v
 cd /srv/project
-rvm install `cat .ruby-version`
+  rvm install `cat .ruby-version`
 cd /
 cd /srv/project
-gem install bundler
-bundle install --without heroku_production_server heroku_production_db production
+gem install bundler -v 1.17.3

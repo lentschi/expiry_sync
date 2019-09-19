@@ -1,35 +1,41 @@
 # This docker-compose file can currently only be used to set up
 # a local development environment, NOT a production server!
-version: '2'
+version: '2.1'
 services:
   app:
     container_name: expiry_sync_app
     hostname: expiry_sync_app
     build:
-      context: ./setup
-      dockerfile: Dockerfile-salted-ubuntu-16.04
+      context: .
+      dockerfile: setup/app/Dockerfile
       args:
-        config_path: ./app
-        tailf_file: /var/log/ionic-serve.log
+        config_path: ./setup/app
+        user_id: ${USER_ID}
+        group_id: ${GROUP_ID}
+        backend_path: ./expiry_sync_server
+        backend_config: ./setup/web
     volumes:
       - ./expiry_sync_client:/srv/project
-      - ./setup/app/salt:/srv/salt
+      - ./.git:/srv/.git
+      - ./expiry_sync_client:/srv/expiry_sync_client
+      - ./expiry_sync_server:/srv/expiry_sync_server
       - ./setup/app:/srv/config
+      - ./setup/web:/srv/web_config
+      - ${TMP_X11}:/tmp/.X11-unix
+      - ${DEV_SHM}:/dev/shm
     networks:
       - expiry_sync-net
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
   db:
-    container_name: expiry_sync_db
+    image: mysql
     hostname: expiry_sync_db
-    build:
-      context: ./setup
-      dockerfile: Dockerfile-salted-ubuntu-16.04
-      args:
-        config_path: ./db
-        tailf_file: /var/log/postgresql/postgresql-9.5-main.log
+    container_name: expiry_sync_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
     volumes:
-      - ./expiry_sync_server:/srv/project
-      - ./setup/db/salt:/srv/salt
-      - ./setup/db:/srv/config
+      - ./setup/db/mysql/sql:/docker-entrypoint-initdb.d
     networks:
       - expiry_sync-net
   mail:
@@ -42,14 +48,15 @@ services:
     container_name: expiry_sync_web
     hostname: expiry_sync_web
     build:
-      context: ./setup
-      dockerfile: Dockerfile-salted-ubuntu-16.04
+      context: .
+      dockerfile: setup/web/Dockerfile
       args:
-        config_path: ./web
-        tailf_file: /var/log/rails.log
+        user_id: ${USER_ID}
+        group_id: ${GROUP_ID}
+        config_path: ./setup/web
+        project_path: ./expiry_sync_server
     volumes:
       - ./expiry_sync_server:/srv/project
-      - ./setup/web/salt:/srv/salt
       - ./setup/web:/srv/config
     depends_on:
       - db
@@ -58,7 +65,11 @@ services:
       - db:db-server
       - mail:mail-server
     ports:
-      - 8012:80
+      - 443:443
+      - 80:80
+    expose:
+      - "443"
+      - "80"
     networks:
       - expiry_sync-net
 
