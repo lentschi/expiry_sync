@@ -85,12 +85,8 @@ Minified production version without console messages:
 
 Minified production version without console messages signed for uploading to Google Play.
 
-This will require you having a Google Developers account and an associated release keystore. Obviously creating a release version of your own only makes sense, if you've forked this repository and added features, which I - for some reason - wouldn't pull.
-
-A [crosswalk](https://crosswalk-project.org/documentation/cordova.html) APK (large, but therefore backwards compatible) and a non-crosswalk APK (smaller but only for newer Androids) will be exported.
-
 ```bash
-cp your-keystore.keystore ./expiry_sync_client/deploy-keys/expiry-sync.keystore
+cp your-android-keystore.keystore ./expiry_sync_client/deploy-keys/expiry-sync.keystore
 docker-compose exec app build-android-release
 ```
 
