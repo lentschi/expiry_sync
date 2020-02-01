@@ -94,6 +94,7 @@ docker-compose exec app build-android-release
 
 Minified production version:
 `docker-compose exec app build-web-release`.
+The resulting build will then be exported to `./expiry_sync-client/www` and must be hosted through a web server at the root path. (Setting a different `base href` currently isn't supported, but could easily be implemented if required.)
 
 ### iOS, Windows, electron
 
